@@ -4,6 +4,7 @@ URLS="$@"
 pkill -f firefox
 sleep 1
 
+# start with a fresh profile (any cache/cookies are wiped out)
 rm -rf ~/.mozilla/firefox/p1/*
 cp -r ff/* ~/.mozilla/firefox/p1/
 

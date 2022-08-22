@@ -1,13 +1,12 @@
 #!/bin/bash
-# wordpress/blogspot sitemap
 
+# extract links when a sitemap is available
 sitemap1() {
     URL="$1"
     curl -k -L "$URL" | xmlstarlet fo --recover --noindent | grep "<loc>" | sed -e 's/<loc>//;s/<\/loc>//;'
 }
 
 # generic sitemap
-
 sitemap2() {
     URL="$1"
     DOMAIN=$(echo "$URL" | awk -F[/:] '{print $4}')
@@ -20,7 +19,6 @@ sitemap2() {
 }
 
 # mediawiki / wiki sitemap
-
 sitemap3() {
     BASE="$1"
     DOMAIN=$(echo "$BASE" | awk -F[/:] '{print $4}')
@@ -64,14 +62,10 @@ sitemap6() {
     rm -rf temp_dir
 }
 
-sitemap_intech() {
-    curl "$1" | xmlstarlet fo --recover --html 2>/dev/null | rg "/chapters/" | perl -ne 'if( m{(/chapters/\d+)} ) { print "https://www.intechopen.com$1\n"; };'
-}
-
 # TODO
 #
 # should be a generic pattern-based max-page search (bsearch)
-# followed by crawling those pages and then the links in them
+# followed by crawling those pages and their links
 sitemap_wp_nositemap() {
     URL="$1"
     export URL

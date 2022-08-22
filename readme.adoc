@@ -1,35 +1,34 @@
-:toc:
-:toclevels: 1
-
 == Intro
 
 This is a minimalistic dynamic page crawler accompanied by a variety of
-scripts used to produce sitemaps.
+tools used to produce sitemaps and some tools to deal with WARC files.
 
 == Quick start
 
-Pull the latest femtocrawl image:
+Clone femtocrawl and pull the latest femtocrawl image:
 
 ----
+git clone https://github.com/wsdookadr/femtocrawl
+cd femtocrawl
 docker pull wsdookadr/femtocrawl
 ----
 
-Create an input and an output directory:
+Create the required directories:
 
 ----
-mkdir input/ mkdir warc/
+mkdir input/ warc/ zim/
 ----
 
 Populate the input url list:
 
 ----
-echo -e "https://lobste.rs\nhttps://news.ycombinator.com\nhttp://google.com\nhttp://mozilla.org" > input/r1.txt
+echo -e "https://lobste.rs\nhttps://news.ycombinator.com\nhttp://google.com\nhttp://mozilla.org" > input/list_urls.txt
 ----
 
-Run femtocrawl
+Run the crawl
 
 ----
-docker run -ti -v `pwd`/input:/home/user/input/:Z  -v `pwd`/warc:/home/user/warc/:Z wsdookadr/femtocrawl './femtocrawl.sh input/r1.txt'
+./bin/op.py --crawl
 ----
 
 After the previous step, you'll see the following files:
@@ -41,8 +40,33 @@ total 1088
 -rw-r--r-- 1 user user 1109534 Aug 22 01:53 1.warc
 ----
 
-Now you can either upload the WARC to link:https://replayweb.page/[replayweb.page] for testing, or you can build an offline archive using
-link:https://github.com/openzim/warc2zim/[warc2zim]
+At this point, you can check the contents of the WARC using link:https://replayweb.page/[replayweb.page]
+
+Now it's time for validation
+
+----
+./bin/op.py --validate
+----
+
+If you get no invalid WARC, you can join all the WARCs into `warc/big.zim`
+
+----
+./bin/op.py --join
+----
+
+At this point you can convert to ZIM
+
+----
+./bin/op.py --zim
+----
+
+And you can serve the archive locally at http://localhost:8083 like this:
+
+----
+./bin/op.py --kiwix
+----
+
+You can also use multiple of these switches at the same time.
 
 == FAQ
 
@@ -84,4 +108,6 @@ Use-cases:
 * building offline web archives
 * website testing
 * cross-testing different web archiving tools
+* long-term news archiving
+
 
