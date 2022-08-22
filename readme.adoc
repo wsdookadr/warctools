@@ -32,11 +32,23 @@ Run femtocrawl
 docker run -ti -v `pwd`/input:/home/user/input/:Z  -v `pwd`/warc:/home/user/warc/:Z wsdookadr/femtocrawl './femtocrawl.sh input/r1.txt'
 ----
 
+After the previous step, you'll see the following files:
+
+----
+user@garage3:~/zim-bench/femtocrawl$ ls -l warc/
+total 1088
+-rw-r--r-- 1 user user      84 Aug 22 01:53 1.urls
+-rw-r--r-- 1 user user 1109534 Aug 22 01:53 1.warc
+----
+
+Now you can either upload the WARC to link:https://replayweb.page/[replayweb.page] for testing, or you can build an offline archive using
+link:https://github.com/openzim/warc2zim/[warc2zim]
+
 == FAQ
 
 === How does it work?
 
-More details about the way it works are in link:TODO this blog post.
+More details about the way it works are in link:https://wsdookadr.github.io/posts/p8/[this blog post].
 
 === My host user UID/GID don't match the container UID/GID. What can I do?
 
