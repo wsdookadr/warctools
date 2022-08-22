@@ -1,0 +1,75 @@
+:toc:
+:toclevels: 1
+
+== Intro
+
+This is a minimalistic dynamic page crawler accompanied by a variety of
+scripts used to produce sitemaps.
+
+== Quick start
+
+Pull the latest femtocrawl image:
+
+----
+docker pull wsdookadr/femtocrawl
+----
+
+Create an input and an output directory:
+
+----
+mkdir input/ mkdir warc/
+----
+
+Populate the input url list:
+
+----
+echo -e "https://lobste.rs\nhttps://news.ycombinator.com\nhttp://google.com\nhttp://mozilla.org" > input/r1.txt
+----
+
+Run femtocrawl
+
+----
+docker run -ti -v `pwd`/input:/home/user/input/:Z  -v `pwd`/warc:/home/user/warc/:Z wsdookadr/femtocrawl './femtocrawl.sh input/r1.txt'
+----
+
+== FAQ
+
+=== How does it work?
+
+More details about the way it works are in link:TODO this blog post.
+
+=== My host user UID/GID don't match the container UID/GID. What can I do?
+
+For now, just change them in the Dockerfile and rebuild the docker image.
+
+=== How do I change the browser profile?
+
+Grab `data/ff.zip`, unpack it locally in `~/.mozilla/firefox/p1` and run
+Firefox with `firefox --profile ~/.mozilla/firefox/p1`. Make any changes
+you want, repack it, replace it on your side and rebuild the Docker image.
+
+=== I want to crawl a site that requires me to log in
+
+See the previous item
+
+=== I have some sites I'd like to crawl, what do I do?
+
+On the host, do the following: place the urls you want crawled in a file,
+one per line and run `bin/triage_new_links.sh` on that file, that will
+produce two files `with_sitemap.txt` and `without_sitemap.txt`. Now
+add the contents of those to `bin/gen_sitemap.sh` and run it. This will
+produce `list_urls2.txt` which you can use as input for femtocrawl.
+
+=== What kind of performance can I expect?
+
+On a 56 Mbps connection with 10 urls and 29 seconds per batch, you can
+crawl 29k urls per day.  The CPU usage is minimal.
+
+=== What do I use this for?
+
+Use-cases:
+
+* building offline web archives
+* website testing
+* cross-testing different web archiving tools
+
