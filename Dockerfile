@@ -15,7 +15,7 @@ WORKDIR /home/user
 
 RUN echo export PATH="\"\$HOME/.local/bin/:\$PATH\"" >> ~/.bashrc
 RUN pip3 install virtualenv==20.16.3
-COPY --chown=user data/ff.zip bin/* /home/user/
+COPY --chown=user data/ff.zip data/sample.warc bin/* /home/user/
 RUN bash ./install_py.sh
 COPY --chown=user data/certs/* /home/user/.mitmproxy/
 RUN mkdir -p /home/user/.mozilla/firefox/p1 /home/user/.cache/mozilla/firefox/p1

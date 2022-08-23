@@ -19,11 +19,11 @@ if __name__ == '__main__':
     if args.shell:
         os.system('''
         mkdir log/ warc/ input/ 2>/dev/null
-        docker run -ti                         \\
-            -v `pwd`/log:/home/user/log/:Z \\
+        docker run --rm=true -ti               \\
+            -v `pwd`/log:/home/user/log/:Z     \\
             -v `pwd`/input:/home/user/input/:Z \\
             -v `pwd`/warc:/home/user/warc/:Z   \\
-            wsdookadr/femtocrawl:0.2 bash
+            wsdookadr/femtocrawl:0.3 bash
         '''
         )
     if args.clean:
@@ -34,36 +34,38 @@ if __name__ == '__main__':
         )
     if args.crawl:
         os.system('''
-        docker run -ti                         \\
+        docker run --rm=true -ti               \\
             -v `pwd`/input:/home/user/input/:Z \\
             -v `pwd`/warc:/home/user/warc/:Z   \\
-            wsdookadr/femtocrawl:0.2 './femtocrawl.sh input/list_urls.txt'
+            wsdookadr/femtocrawl:0.3 './femtocrawl.sh input/list_urls.txt'
         '''
         )
     if args.join:
         os.system('''
-        docker run -ti                         \\
+        rm -f warc/big.warc 2>/dev/null
+        docker run --rm=true -ti               \\
             -v `pwd`/warc:/home/user/warc/:Z   \\
-            wsdookadr/femtocrawl:0.2 'env VIRTUAL_ENV=v_warcio ./v_warcio/bin/python ./warc_join.py --indir warc/ --out warc/big.warc'
+            wsdookadr/femtocrawl:0.3 'env VIRTUAL_ENV=v_warcio ./v_warcio/bin/python ./warc_join.py --indir warc/ --out warc/big.warc'
         '''
         )
     if args.validate:
         os.system('''
+        rm -f log/* 2>/dev/null
         mkdir log/ 2>/dev/null
-        docker run -ti                         \\
+        docker run --rm=true -ti               \\
             -v `pwd`/warc:/home/user/warc/:Z   \\
             -v `pwd`/log:/home/user/log/:Z     \\
-            wsdookadr/femtocrawl:0.2 './validate.sh'
+            wsdookadr/femtocrawl:0.3 './validate.sh'
         '''
         )
     if args.zim:
         os.system('''
-        set -x
+        rm -f zim/big.zim 2>/dev/null
         mkdir zim/ warc/ 2>/dev/null
-        docker run -ti                                          \\
+        docker run --rm=true -ti                                \\
             -v `pwd`/warc:/home/user/warc/:Z                    \\
             -v `pwd`/zim:/home/user/zim/:Z                      \\
-            wsdookadr/femtocrawl:0.2                            \\
+            wsdookadr/femtocrawl:0.3                            \\
             'env VIRTUAL_ENV=v_warc2zim ./v_warc2zim/bin/warc2zim --verbose --lang eng --output zim/ --zim-file big.zim --name "big" warc/big.warc'
         '''
         )
@@ -71,10 +73,10 @@ if __name__ == '__main__':
         os.system('''
         mkdir log/ 2>/dev/null
         echo "Access the ZIM archive at http://localhost:8083/"
-        docker run -ti                       \\
-            -p 8083:8083             \\
+        docker run --rm=true -ti             \\
+            -p 8083:8083                     \\
             -v `pwd`/zim:/home/user/zim/:Z   \\
-            wsdookadr/femtocrawl:0.2 '/usr/bin/kiwix-serve -i 0.0.0.0 --threads 30 --port 8083 /home/user/zim/big.zim'
+            wsdookadr/femtocrawl:0.3 '/usr/bin/kiwix-serve -i 0.0.0.0 --threads 30 --port 8083 /home/user/zim/big.zim'
         '''
         )
 

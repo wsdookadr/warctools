@@ -48,7 +48,9 @@ Now it's time for validation
 ./bin/op.py --validate
 ----
 
-If you get no invalid WARC, you can join all the WARCs into `warc/big.zim`
+If invalid WARCs are reported, you can investigate further or exclude them by deleting them.
+
+When all WARCs in the `warc/` directory are valid, you can join all the WARCs into `warc/big.zim`
 
 ----
 ./bin/op.py --join
@@ -78,11 +80,21 @@ More details about the way it works are in link:https://wsdookadr.github.io/post
 
 For now, just change them in the Dockerfile and rebuild the docker image.
 
-=== How do I change the browser profile?
+=== I want to change the browser profile, add extensions or userscripts, how do I do that?
 
-Grab `data/ff.zip`, unpack it locally in `~/.mozilla/firefox/p1` and run
-Firefox with `firefox --profile ~/.mozilla/firefox/p1`. Make any changes
-you want, repack it, replace it on your side and rebuild the Docker image.
+Run the following on the host to get the Firefox profile
+
+----
+id=$(docker create wsdookadr/femtocrawl:latest)
+docker cp $id:/home/user/ff ~/.mozilla/firefox/p1
+docker rm -v $id
+----
+
+Start Firefox on the host with `firefox --profile ~/.mozilla/firefox/p1`.
+Make any changes you want to it, close Firefox, zip the profile and place it in `data/ff.zip`
+and rebuild the Docker image.
+
+NOTE: The default ff profile comes with link:https://violentmonkey.github.io/api/gm/[violentmonkey] and link:https://github.com/gorhill/uBlock[uBlock].
 
 === I want to crawl a site that requires me to log in
 
