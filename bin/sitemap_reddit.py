@@ -10,7 +10,8 @@ import argparse
 #
 # Note: There is a map of reddit here https://anvaka.github.io/map-of-reddit
 # 
-
+#
+#
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(description='reddit sitemap generator')
     arg_parser.add_argument('--sub'   ,dest='sub'  , action='store', required=True, help='get all threads for this sub')

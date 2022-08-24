@@ -41,6 +41,7 @@ def create_db(db_path):
     '''
     con = sqlite3.connect(db_path)
     con.executescript(sql)
+    con.close()
 
 
 def import_batch(db_path, batch):
@@ -51,19 +52,22 @@ def import_batch(db_path, batch):
     con.execute('PRAGMA journal_mode = WAL')
     con.execute('PRAGMA synchronous = OFF')
 
-    c = con.cursor()
 
     try:
+        c = con.cursor()
         c.executemany(sql1, batch)
         con.commit()
-    except Exception as e:
-        pass
+    except con.Error as e:
+        print(e)
 
     try:
+        c = con.cursor()
         c.executemany(sql2, batch)
         con.commit()
-    except Exception as e:
-        pass
+    except con.Error as e:
+        print(e)
+
+    con.close()
 
 def optimize_db(db_path):
     sql='''
@@ -73,6 +77,7 @@ def optimize_db(db_path):
     '''
     con = sqlite3.connect(db_path)
     con.executescript(sql)
+    con.close()
 
 def process_html(buf):
     r = lxml.html.fromstring(buf)
@@ -95,7 +100,10 @@ def process_html(buf):
     except Exception as e:
         raw_size,text_size = 0,0
 
-    return (uri, "html", str(raw_size), str(text_size), text)
+    if uri is not None and raw_size is not None and text_size is not None and text is not None:
+        return (uri, "html", str(raw_size), str(text_size), text)
+    else:
+        return None
 
 def process_pdf(buf):
     process = subprocess.Popen(
@@ -118,7 +126,10 @@ def process_pdf(buf):
     except Exception as e:
         raw_size,text_size = 0,0
 
-    return (uri, "pdf", str(raw_size), str(text_size), text)
+    if uri is not None and raw_size is not None and text_size is not None and text is not None:
+        return (uri, "pdf", str(raw_size), str(text_size), text)
+    else:
+        return None
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(description='WARC text extraction tool')
@@ -157,16 +168,20 @@ if __name__ == '__main__':
                 try:
                     stream = record.content_stream()
                     buf = stream.read()
+
+                    row = None
                     if ct and 'html' in ct:
-                        batch += [process_html(buf)]
-                        i += 1
+                        row = process_html(buf)
                     elif ct and 'pdf' in ct:
-                        batch += [process_pdf(buf)]
+                        row = process_pdf(buf)
+                    
+                    if row is not None:
                         i += 1
+                        batch += [row]
                 except Exception as e:
                     continue
 
-                if i == 1000:
+                if i == 30:
                     import_batch(args.out, batch)
                     i = 0
                     batch = []

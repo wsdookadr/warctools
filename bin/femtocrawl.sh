@@ -18,7 +18,6 @@ while read x; do
     pkill -INT -f mitmdump
     pkill -KILL -f firefox
 
-
     i=$((i+1))
     echo "i=$i"
 

@@ -76,7 +76,9 @@ You can also use multiple of these switches at the same time.
 * [x] warc joining
 * [x] zim conversion
 * [x] kiwix integration
-* [x] warc text indexing for html and pdf records and search
+* [x] warc indexing and search (for html and pdf records)
+* [x] improve docker image build times. a lot of steps are re-run every time now.
+* [30%] add chromium support
 * [ ] pdf autodownload (when the pdf does not load, but a dialog shows up instead)
 * [ ] archive.org support for an entire website to be downloaded. one
       of the problems is fixing the old links which may be invalid and that may
@@ -84,13 +86,15 @@ You can also use multiple of these switches at the same time.
       (target link:https://github.com/hartator/wayback-machine-downloader/issues[issues] found here )
 * [ ] rewrite bin/femtocrawl.sh in python but retain logic, add args including
       har output switch
-* [ ] add chromium support
 * [ ] build capability to compare har files for the same web page loaded in
       different browsers.
       (request completion times, uris of the requests made, response status codes)
-* [ ] investigate usage of the latest browser binaries, cut down on
-      distribution package dependencies and decrease the docker image size
+* [ ] investigate usage of latest browser binaries instead of distro packages
 * [ ] generalized and easy to use sitemap generation
+
+== Contributing
+
+The focus is on the roadmap, pull requests are welcome
 
 == FAQ
 

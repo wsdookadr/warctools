@@ -6,6 +6,7 @@ import argparse
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(description='operator script for femtocrawl')
     arg_parser.add_argument('--shell'   ,dest='shell', action='store_true', required=False, help='starts the container and provides a shell')
+    arg_parser.add_argument('--attach'   ,dest='attach', action='store_true', required=False, help='attach to first femtocrawl container found')
     arg_parser.add_argument('--clean'   ,dest='clean', action='store_true', required=False, help='cleans any data from previous crawls')
     arg_parser.add_argument('--crawl'   ,dest='crawl', action='store_true', required=False, help='runs docker on default input file')
     arg_parser.add_argument('--join'    ,dest='join', action='store_true'  , required=False, help='joins all warc into a single warc(prep for zim conversion)')
@@ -14,10 +15,16 @@ if __name__ == '__main__':
     arg_parser.add_argument('--index'   ,dest='index', action='store_true', required=False, help='index warc')
     arg_parser.add_argument('--kiwix'   ,dest='kiwix', action='store_true', required=False, help='start kiwix server with zim/big.zim')
 
-    TAG="0.3"
+    TAG="0.3.1"
 
     args = arg_parser.parse_args()
-
+    if args.attach:
+        os.system('''
+        mkdir log/ warc/ input/ 2>/dev/null
+        id=$(docker ps | rg "femtocrawl" | head -1 | awk '{print $1}')
+        docker exec -ti $id bash
+        '''
+        )
     if args.shell:
         os.system('''
         mkdir log/ warc/ input/ 2>/dev/null
