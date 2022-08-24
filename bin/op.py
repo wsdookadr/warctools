@@ -14,22 +14,26 @@ if __name__ == '__main__':
     arg_parser.add_argument('--index'   ,dest='index', action='store_true', required=False, help='index warc')
     arg_parser.add_argument('--kiwix'   ,dest='kiwix', action='store_true', required=False, help='start kiwix server with zim/big.zim')
 
+    TAG="0.3"
+
     args = arg_parser.parse_args()
 
     if args.shell:
         os.system('''
         mkdir log/ warc/ input/ 2>/dev/null
         docker run --rm=true -ti               \\
+            -v `pwd`/db:/home/user/db/:Z       \\
             -v `pwd`/log:/home/user/log/:Z     \\
             -v `pwd`/input:/home/user/input/:Z \\
             -v `pwd`/warc:/home/user/warc/:Z   \\
-            wsdookadr/femtocrawl:0.3 bash
-        '''
+            wsdookadr/femtocrawl:{0} bash
+        '''.format(TAG)
         )
     if args.clean:
         os.system('''
         rm -rf warc/*
         rm -rf zim/*
+        rm -rf db/*
         '''
         )
     if args.crawl:
@@ -37,16 +41,16 @@ if __name__ == '__main__':
         docker run --rm=true -ti               \\
             -v `pwd`/input:/home/user/input/:Z \\
             -v `pwd`/warc:/home/user/warc/:Z   \\
-            wsdookadr/femtocrawl:0.3 './femtocrawl.sh input/list_urls.txt'
-        '''
+            wsdookadr/femtocrawl:{0} './femtocrawl.sh input/list_urls.txt'
+        '''.format(TAG)
         )
     if args.join:
         os.system('''
         rm -f warc/big.warc 2>/dev/null
         docker run --rm=true -ti               \\
             -v `pwd`/warc:/home/user/warc/:Z   \\
-            wsdookadr/femtocrawl:0.3 'env VIRTUAL_ENV=v_warcio ./v_warcio/bin/python ./warc_join.py --indir warc/ --out warc/big.warc'
-        '''
+            wsdookadr/femtocrawl:{0} 'env VIRTUAL_ENV=v_warcio ./v_warcio/bin/python ./warc_join.py --indir warc/ --out warc/big.warc'
+        '''.format(TAG)
         )
     if args.validate:
         os.system('''
@@ -55,8 +59,17 @@ if __name__ == '__main__':
         docker run --rm=true -ti               \\
             -v `pwd`/warc:/home/user/warc/:Z   \\
             -v `pwd`/log:/home/user/log/:Z     \\
-            wsdookadr/femtocrawl:0.3 './validate.sh'
-        '''
+            wsdookadr/femtocrawl:{0} './validate.sh'
+        '''.format(TAG)
+        )
+    if args.index:
+        os.system('''
+        rm -f db/big.db
+        docker run --rm=true -ti               \\
+            -v `pwd`/warc:/home/user/warc/:Z   \\
+            -v `pwd`/db:/home/user/db/:Z       \\
+            wsdookadr/femtocrawl:{0} 'env VIRTUAL_ENV=v_warcindex ./v_warcindex/bin/python ./warc_index.py --infile warc/big.warc --out db/big.db'
+        '''.format(TAG)
         )
     if args.zim:
         os.system('''
@@ -65,9 +78,9 @@ if __name__ == '__main__':
         docker run --rm=true -ti                                \\
             -v `pwd`/warc:/home/user/warc/:Z                    \\
             -v `pwd`/zim:/home/user/zim/:Z                      \\
-            wsdookadr/femtocrawl:0.3                            \\
+            wsdookadr/femtocrawl:{0}                            \\
             'env VIRTUAL_ENV=v_warc2zim ./v_warc2zim/bin/warc2zim --verbose --lang eng --output zim/ --zim-file big.zim --name "big" warc/big.warc'
-        '''
+        '''.format(TAG)
         )
     if args.kiwix:
         os.system('''
@@ -76,8 +89,8 @@ if __name__ == '__main__':
         docker run --rm=true -ti             \\
             -p 8083:8083                     \\
             -v `pwd`/zim:/home/user/zim/:Z   \\
-            wsdookadr/femtocrawl:0.3 '/usr/bin/kiwix-serve -i 0.0.0.0 --threads 30 --port 8083 /home/user/zim/big.zim'
-        '''
+            wsdookadr/femtocrawl:{0} '/usr/bin/kiwix-serve -i 0.0.0.0 --threads 30 --port 8083 /home/user/zim/big.zim'
+        '''.format(TAG)
         )
 
 

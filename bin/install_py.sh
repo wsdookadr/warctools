@@ -24,4 +24,9 @@ source ./v_warc2zim/bin/activate
 pip3 install warc2zim==1.4.3 && pip3 cache purge
 deactivate
 
-
+~/.local/bin/virtualenv v_warcindex
+chmod +x ./v_warcindex/bin/activate
+source ./v_warcindex/bin/activate
+pip3 install warcio==1.7.4 && pip3 cache purge
+pip3 install lxml==4.6.3 && pip3 cache purge
+deactivate

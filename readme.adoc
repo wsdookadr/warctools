@@ -70,6 +70,28 @@ And you can serve the archive locally at http://localhost:8083 like this:
 
 You can also use multiple of these switches at the same time.
 
+== Roadmap
+
+* [x] basic crawling of web pages
+* [x] warc joining
+* [x] zim conversion
+* [x] kiwix integration
+* [x] warc text indexing for html and pdf records and search
+* [ ] pdf autodownload (when the pdf does not load, but a dialog shows up instead)
+* [ ] archive.org support for an entire website to be downloaded. one
+      of the problems is fixing the old links which may be invalid and that may
+      require patching the warc
+      (target link:https://github.com/hartator/wayback-machine-downloader/issues[issues] found here )
+* [ ] rewrite bin/femtocrawl.sh in python but retain logic, add args including
+      har output switch
+* [ ] add chromium support
+* [ ] build capability to compare har files for the same web page loaded in
+      different browsers.
+      (request completion times, uris of the requests made, response status codes)
+* [ ] investigate usage of the latest browser binaries, cut down on
+      distribution package dependencies and decrease the docker image size
+* [ ] generalized and easy to use sitemap generation
+
 == FAQ
 
 === How does it work?
@@ -94,7 +116,9 @@ Start Firefox on the host with `firefox --profile ~/.mozilla/firefox/p1`.
 Make any changes you want to it, close Firefox, zip the profile and place it in `data/ff.zip`
 and rebuild the Docker image.
 
-NOTE: The default ff profile comes with link:https://violentmonkey.github.io/api/gm/[violentmonkey] and link:https://github.com/gorhill/uBlock[uBlock].
+NOTE: The default ff profile comes with 
+link:https://violentmonkey.github.io/api/gm/[violentmonkey] and 
+link:https://github.com/gorhill/uBlock[uBlock].
 
 === I want to crawl a site that requires me to log in
 
@@ -108,10 +132,14 @@ produce two files `with_sitemap.txt` and `without_sitemap.txt`. Now
 add the contents of those to `bin/gen_sitemap.sh` and run it. This will
 produce `list_urls2.txt` which you can use as input for femtocrawl.
 
+=== I want to crawl some parts of reddit and read them offline, how do I do that?
+
+Have a look at link:https://github.com/wsdookadr/femtocrawl/blob/27fed88f4b1f99bf7917b9eecab753610fe653ed/bin/sitemap_reddit.py[sitemap_reddit.py]
+
 === What kind of performance can I expect?
 
 On a 56 Mbps connection with 10 urls and 29 seconds per batch, you can
-crawl 29k urls per day.  The CPU usage is minimal.
+crawl 29k urls per day. The CPU usage is minimal.
 
 === What do I use this for?
 
