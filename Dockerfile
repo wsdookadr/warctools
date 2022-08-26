@@ -15,6 +15,8 @@ RUN rm -f /usr/bin/kiwix-tools.tar.gz && \
     rm -rf /usr/bin/kiwix-tools*
 RUN groupadd -g 1000 user
 RUN useradd -rm -d /home/user -s /bin/bash -u 1000 -g 1000 user
+COPY bin/conf_root.sh conf_root.sh
+RUN ./conf_root.sh
 USER user
 WORKDIR /home/user
 RUN echo export PATH="\"\$HOME/.local/bin/:\$PATH\"" >> ~/.bashrc
@@ -26,9 +28,10 @@ RUN bash -c '~/.local/bin/virtualenv v_warc2zim && chmod +x ./v_warc2zim/bin/act
 RUN bash -c '~/.local/bin/virtualenv v_warcindex && chmod +x ./v_warcindex/bin/activate && source ./v_warcindex/bin/activate && pip3 install warcio==1.7.4 lxml==4.6.3 && pip3 cache purge && deactivate'
 COPY --chown=user data/ff.zip data/sample.warc /home/user/
 COPY --chown=user data/certs/* /home/user/.mitmproxy/
-COPY --chown=user bin/import_certs.sh /home/user/
-RUN ./import_certs.sh
+COPY --chown=user bin/conf_user.sh /home/user/
+RUN ./conf_user.sh
 RUN unzip ff.zip && rm -f ff.zip
 RUN mkdir -p /home/user/.mozilla/firefox/p1 /home/user/.cache/mozilla/firefox/p1
 COPY --chown=user bin/* /home/user/
+
 ENTRYPOINT ["bash","-i","-c"]

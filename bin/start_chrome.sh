@@ -1,7 +1,10 @@
 #!/bin/bash
+LIMIT=shift
 URLS="$@"
-chromium \
+# --ignore-certificate-errors \
+timeout $LIMIT chromium \
 --remote-debugging-port=9222 \
+--disable-http2 \
 --no-first-run \
 --proxy-server="socks5://127.0.0.1:9001" \
 --host-resolver-rules="MAP * ~NOTFOUND , EXCLUDE 127.0.0.1" \

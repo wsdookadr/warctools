@@ -1,3 +1,5 @@
 warc
 zim
 db
+log
+bin/__pycache__/

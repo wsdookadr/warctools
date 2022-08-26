@@ -1,0 +1,8 @@
+warc/
+db/
+zim/
+har/
+ff/
+bin/__pycache__/
+input/
+log/

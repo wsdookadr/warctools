@@ -78,14 +78,14 @@ You can also use multiple of these switches at the same time.
 * [x] kiwix integration
 * [x] warc indexing and search (for html and pdf records)
 * [x] improve docker image build times. a lot of steps are re-run every time now.
-* [30%] add chromium support
+* [x] rewrite bin/femtocrawl.sh in python but retain logic, add args including
+      har output switch
+* [50%] add chromium support
 * [ ] pdf autodownload (when the pdf does not load, but a dialog shows up instead)
 * [ ] archive.org support for an entire website to be downloaded. one
       of the problems is fixing the old links which may be invalid and that may
       require patching the warc
       (target link:https://github.com/hartator/wayback-machine-downloader/issues[issues] found here )
-* [ ] rewrite bin/femtocrawl.sh in python but retain logic, add args including
-      har output switch
 * [ ] build capability to compare har files for the same web page loaded in
       different browsers.
       (request completion times, uris of the requests made, response status codes)

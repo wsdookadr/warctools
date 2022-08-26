@@ -5,6 +5,8 @@ import argparse
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(description='operator script for femtocrawl')
+    arg_parser.add_argument('--output-type'  ,dest='output_type'   ,action='store', required=False, default='warc', choices=['har','warc'], help='output type')
+    arg_parser.add_argument('--browser'      ,dest='browser'       ,action='store', required=False, default='firefox', choices=['chromium','firefox'], help='browser to use')
     arg_parser.add_argument('--shell'   ,dest='shell', action='store_true', required=False, help='starts the container and provides a shell')
     arg_parser.add_argument('--attach'   ,dest='attach', action='store_true', required=False, help='attach to first femtocrawl container found')
     arg_parser.add_argument('--clean'   ,dest='clean', action='store_true', required=False, help='cleans any data from previous crawls')
@@ -45,11 +47,12 @@ if __name__ == '__main__':
         )
     if args.crawl:
         os.system('''
+        mkdir {2}
         docker run --rm=true -ti               \\
             -v `pwd`/input:/home/user/input/:Z \\
-            -v `pwd`/warc:/home/user/warc/:Z   \\
-            wsdookadr/femtocrawl:{0} './femtocrawl.sh input/list_urls.txt'
-        '''.format(TAG)
+            -v `pwd`/{2}:/home/user/{2}/:Z   \\
+            wsdookadr/femtocrawl:{0} './femtocrawl.py --url-list input/list_urls.txt --browser {1} --output-type {2}'
+        '''.format(TAG,args.browser,args.output_type)
         )
     if args.join:
         os.system('''

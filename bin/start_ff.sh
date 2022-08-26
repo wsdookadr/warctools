@@ -1,4 +1,5 @@
 #!/bin/bash
+LIMIT=shift
 URLS="$@"
 
 # start with a fresh profile (any cache/cookies are wiped out)
@@ -13,8 +14,7 @@ cp -r ff/* ~/.mozilla/firefox/p1/
 # settings so we only have to delete the metadata
 rm -rf ~/.mozilla/firefox/p1/*.sqlite ~/.mozilla/firefox/p1/sessionstore.js
 
-firefox \
---new-instance \
+timeout $LIMIT firefox \
 --headless \
 --profile ~/.mozilla/firefox/p1 \
 ${URLS}
