@@ -35,6 +35,7 @@ if __name__ == '__main__':
             -v `pwd`/log:/home/user/log/:Z     \\
             -v `pwd`/input:/home/user/input/:Z \\
             -v `pwd`/warc:/home/user/warc/:Z   \\
+            -v `pwd`/zim:/home/user/zim/:Z   \\
             wsdookadr/femtocrawl:{0} bash
         '''.format(TAG)
         )
@@ -51,7 +52,7 @@ if __name__ == '__main__':
         docker run --rm=true -ti               \\
             -v `pwd`/input:/home/user/input/:Z \\
             -v `pwd`/{2}:/home/user/{2}/:Z   \\
-            wsdookadr/femtocrawl:{0} './femtocrawl.py --url-list input/list_urls.txt --browser {1} --output-type {2}'
+            wsdookadr/femtocrawl:{0} './femtocrawl.py --batch-timeout 10 --url-list input/list_urls.txt --browser {1} --output-type {2}'
         '''.format(TAG,args.browser,args.output_type)
         )
     if args.join:

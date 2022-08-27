@@ -1,6 +1,9 @@
 #!/bin/bash
-LIMIT=shift
+LIMIT=$1
+shift
 URLS="$@"
+
+echo "LIMIT=$LIMIT"
 
 # start with a fresh profile (any cache/cookies are wiped out)
 rm -rf ~/.mozilla/firefox/p1/*

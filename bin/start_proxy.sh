@@ -6,6 +6,7 @@ rm -f dump.har dump.warc
 
 env VIRTUAL_ENV=v_mitmdump \
     ./v_mitmproxy/bin/mitmdump \
+    --set keep-host-header \
     -m socks5 -p 9001 -s ./har_dump.py --set hardump=./dump.har
 
 # 2> echo "$NUM $FMT"

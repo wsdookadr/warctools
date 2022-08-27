@@ -52,6 +52,7 @@ cat<<'EOF' > ~/.mitmproxy/config.yaml
 # https://docs.mitmproxy.org/stable/concepts-filters/
 
 block_list:
+  - :~d cdn.mozilla.net:404
   - :~d adzerk.net:404
   - :~d cdn.cookielaw.org:404
   - :~d mylivechat.com:404

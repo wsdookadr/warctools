@@ -33,5 +33,6 @@ RUN ./conf_user.sh
 RUN unzip ff.zip && rm -f ff.zip
 RUN mkdir -p /home/user/.mozilla/firefox/p1 /home/user/.cache/mozilla/firefox/p1
 COPY --chown=user bin/* /home/user/
+RUN cp warc2zim.main.py.patched /home/user/v_warc2zim/lib/python3.9/site-packages/warc2zim/main.py
 
 ENTRYPOINT ["bash","-i","-c"]

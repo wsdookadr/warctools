@@ -1,5 +1,6 @@
 #!/bin/bash
-LIMIT=shift
+LIMIT=$1
+shift
 URLS="$@"
 # --ignore-certificate-errors \
 timeout $LIMIT chromium \

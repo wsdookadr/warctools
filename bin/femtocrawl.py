@@ -52,8 +52,8 @@ if __name__ == '__main__':
         batch_num = str(i)
         subprocess.Popen(["/bin/bash","start_proxy.sh",batch_num,args.output_type])
         sleep(1)
-        subprocess.Popen(["/bin/bash",start_script,args.batch_timeout] + batch)
-        sleep(args.batch_timeout)
+        subprocess.Popen(["/bin/bash",start_script,str(args.batch_timeout)] + batch)
+        sleep(int(args.batch_timeout))
     kill_browser_mitm(args.browser)
     sleep(1)
 
