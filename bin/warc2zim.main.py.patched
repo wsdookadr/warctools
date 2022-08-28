@@ -610,6 +610,11 @@ class WARC2Zim:
             return False
 
         location = record.http_headers["Location"]
+
+        # Fix for Mozilla's cdn.mozilla.net responses which are missing the Location header
+        if location is None:
+            return False
+
         return canonicalize(url) == canonicalize(location)
 
     def add_items_for_warc_record(self, record):
@@ -813,6 +818,7 @@ def canonicalize(url):
     """Return a 'canonical' version of the url under which it is stored in the ZIM
     For now, just removing the scheme http:// or https:// scheme
     """
+
     if url.startswith("https://"):
         return url[8:]
 
