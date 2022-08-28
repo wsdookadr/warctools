@@ -88,6 +88,9 @@ You can also use multiple of these switches at the same time.
 * [x] rewrite bin/femtocrawl.sh in python but retain logic, add args including
       har output switch
 * [50%] add chromium support
+* [ ] the bash version of femtocrawl knew where to pick up where it left off, do the same for the py version
+* [ ] merge validation into crawling, right after the warc has been produced, as a background process
+      independent of the rest.
 * [ ] pdf autodownload (when the pdf does not load, but a dialog shows up instead)
 * [ ] archive.org support for an entire website to be downloaded. one
       of the problems is fixing the old links which may be invalid and that may
@@ -96,13 +99,28 @@ You can also use multiple of these switches at the same time.
 * [ ] build capability to compare har files for the same web page loaded in
       different browsers.
       (request completion times, uris of the requests made, response status codes)
+* [ ] find ways to force terminate firefox without corrupting its profile
+      (currently cache is completely disabled on purpose).
+      so termination should work, but the cache should be preserved and reused between batches but
+      no other data should.
+* [ ] design recrawl using a combination of: sitemaps, feeds, common-crawl, etag header & HEAD request
+* [ ] find a way to freeze the dom post-rendering, export it as html and use that for indexing.
+      this will help with comment sections which are many times loaded by 3rd party js and show up
+      as separate warc records.
 * [ ] find ways to derive website templates, use that to locate redundant content
-      and filter it out of the indexing process in order to improve offline searches
+      and filter it out of the indexing process in order to improve offline search results
 * [ ] integrate blocking lists at proxy-level
       see also webrecorder/browsertrix-crawler#154
+* [ ] write tests for this entire project by finding some relevant url set, recording
+      the traffic and playing it back with mitmproxy.
 * [ ] investigate usage of latest browser binaries instead of distro packages
 * [ ] the sitemap generation process is too ad-hoc, needs to be generalized and made easy to use
 * [ ] improve docs with as many examples as possible
+* [ ] find a way to predict an optimal timeout for a single page based on previous pages
+      on the same domain or same common prefix that is long enough (under the assumption that a long
+      common prefix is a good indicator of similar load time). will require setting up some actual
+      telemetry between the browser and some separate data store, might require some browser extension.
+      this will also help in determining an optimal batch timeout.
 
 == Contributing
 
