@@ -47,13 +47,17 @@ if __name__ == '__main__':
     i = 0
     for batch in batches:
         i += 1
+        print("i=",i)
+        if os.path.isfile("warc/{0}.warc".format(i)):
+            continue
         kill_browser_mitm(args.browser)
-        sleep(3)
+        sleep(4)
         batch_num = str(i)
         subprocess.Popen(["/bin/bash","start_proxy.sh",batch_num,args.output_type])
         sleep(1)
         subprocess.Popen(["/bin/bash",start_script,str(args.batch_timeout)] + batch)
         sleep(int(args.batch_timeout))
+    sleep(1)
     kill_browser_mitm(args.browser)
     sleep(1)
 

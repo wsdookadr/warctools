@@ -2,24 +2,41 @@
 import os
 import re
 import argparse
+def valid_dir(outputdir):
+    if not os.path.isdir(outputdir):
+        raise argparse.ArgumentTypeError('input directory does not exist')
+    return outputdir
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(description='operator script for femtocrawl')
-    arg_parser.add_argument('--output-type'  ,dest='output_type'   ,action='store', required=False, default='warc', choices=['har','warc'], help='output type')
-    arg_parser.add_argument('--browser'      ,dest='browser'       ,action='store', required=False, default='firefox', choices=['chromium','firefox'], help='browser to use')
-    arg_parser.add_argument('--shell'   ,dest='shell', action='store_true', required=False, help='starts the container and provides a shell')
-    arg_parser.add_argument('--attach'   ,dest='attach', action='store_true', required=False, help='attach to first femtocrawl container found')
-    arg_parser.add_argument('--clean'   ,dest='clean', action='store_true', required=False, help='cleans any data from previous crawls')
-    arg_parser.add_argument('--crawl'   ,dest='crawl', action='store_true', required=False, help='runs docker on default input file')
-    arg_parser.add_argument('--join'    ,dest='join', action='store_true'  , required=False, help='joins all warc into a single warc(prep for zim conversion)')
-    arg_parser.add_argument('--validate',dest='validate', action='store_true', required=False, help='validates the warc against warc2zim')
-    arg_parser.add_argument('--zim'     ,dest='zim', action='store_true', required=False, help='converts warc/big.warc into zim/big.zim')
-    arg_parser.add_argument('--index'   ,dest='index', action='store_true', required=False, help='index warc')
-    arg_parser.add_argument('--kiwix'   ,dest='kiwix', action='store_true', required=False, help='start kiwix server with zim/big.zim')
+    arg_parser.add_argument('--output-type' ,dest='output_type'   ,action='store', required=False, default='warc', choices=['har','warc'], help='output type')
+    arg_parser.add_argument('--browser'     ,dest='browser'       ,action='store', required=False, default='firefox', choices=['chromium','firefox'], help='browser to use')
+    arg_parser.add_argument('--shell'       ,dest='shell', action='store_true', required=False, help='starts the container and provides a shell')
+    arg_parser.add_argument('--attach'      ,dest='attach', action='store_true', required=False, help='attach to first femtocrawl container found')
+    arg_parser.add_argument('--clean'       ,dest='clean', action='store_true', required=False, help='cleans any data from previous crawls')
+    arg_parser.add_argument('--crawl'       ,dest='crawl', action='store_true', required=False, help='runs docker on default input file')
+    arg_parser.add_argument('--join'        ,dest='join', action='store_true'  , required=False, help='joins all warc into a single warc(prep for zim conversion)')
+    arg_parser.add_argument('--validate'    ,dest='validate', action='store_true', required=False, help='validates the warc against warc2zim')
+    arg_parser.add_argument('--zim'         ,dest='zim', action='store_true', required=False, help='converts warc/big.warc into zim/big.zim')
+    arg_parser.add_argument('--index'       ,dest='index', action='store_true', required=False, help='index warc')
+    arg_parser.add_argument('--kiwix'       ,dest='kiwix', action='store_true', required=False, help='start kiwix server with zim/big.zim')
+    arg_parser.add_argument('--symlinks'    ,dest='symlinks', action='store', default=None, type=valid_dir, required=False, help='create dir structure at a the given location and symlinks pointing there')
 
     TAG="0.3.1"
 
     args = arg_parser.parse_args()
+
+    if args.symlinks:
+        # creates the dir structure at the given directory and
+        # symlinks all the dirs back here
+        os.system('''
+        for x in  warc zim db log; do
+            rm -f $x
+            mkdir -p {0}/$x 2>/dev/null
+            ln    -s {0}/$x
+        done
+        '''.format(args.symlinks)
+        )
     if args.attach:
         os.system('''
         mkdir log/ warc/ input/ 2>/dev/null
@@ -52,7 +69,7 @@ if __name__ == '__main__':
         docker run --rm=true -ti               \\
             -v `pwd`/input:/home/user/input/:Z \\
             -v `pwd`/{2}:/home/user/{2}/:Z   \\
-            wsdookadr/femtocrawl:{0} './femtocrawl.py --batch-timeout 25 --url-list input/list_urls.txt --browser {1} --output-type {2}'
+            wsdookadr/femtocrawl:{0} './femtocrawl.py --batch-timeout 24 --url-list input/list_urls.txt --browser {1} --output-type {2}'
         '''.format(TAG,args.browser,args.output_type)
         )
     if args.join:

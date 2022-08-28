@@ -88,9 +88,11 @@ You can also use multiple of these switches at the same time.
 * [x] rewrite bin/femtocrawl.sh in python but retain logic, add args including
       har output switch
 * [50%] add chromium support
-* [ ] the bash version of femtocrawl knew where to pick up where it left off, do the same for the py version
+* [x] the bash version of femtocrawl knew where to pick up where it left off, do the same for the py version
 * [ ] merge validation into crawling, right after the warc has been produced, as a background process
       independent of the rest.
+* [ ] make it easy to check and handle redownload of broken resources in the already downloaded warc
+      (resources that didn't have time to complete within the given timeout)
 * [ ] pdf autodownload (when the pdf does not load, but a dialog shows up instead)
 * [ ] archive.org support for an entire website to be downloaded. one
       of the problems is fixing the old links which may be invalid and that may
@@ -103,10 +105,12 @@ You can also use multiple of these switches at the same time.
       (currently cache is completely disabled on purpose).
       so termination should work, but the cache should be preserved and reused between batches but
       no other data should.
+* [ ] experiment with and add compression for lossy multimedia compression openzim/warc2zim#72
 * [ ] design recrawl using a combination of: sitemaps, feeds, common-crawl, etag header & HEAD request
-* [ ] find a way to freeze the dom post-rendering, export it as html and use that for indexing.
+* [ ] find a way to take a dom snapshot post-rendering, export it as html and use that for indexing.
       this will help with comment sections which are many times loaded by 3rd party js and show up
-      as separate warc records.
+      as separate warc records. see link:https://addons.mozilla.org/en-US/firefox/addon/pdso/[pdso] ; 
+      link:https://github.com/prantlf/grunt-html-dom-snapshot[dom-snapshot]
 * [ ] find ways to derive website templates, use that to locate redundant content
       and filter it out of the indexing process in order to improve offline search results
 * [ ] integrate blocking lists at proxy-level
@@ -121,6 +125,9 @@ You can also use multiple of these switches at the same time.
       common prefix is a good indicator of similar load time). will require setting up some actual
       telemetry between the browser and some separate data store, might require some browser extension.
       this will also help in determining an optimal batch timeout.
+* [ ] look more into link:https://firefox-source-docs.mozilla.org/index.html[ff source docs] to see if
+      there are possible improvements
+        
 
 == Contributing
 
@@ -164,7 +171,7 @@ On the host, do the following: place the urls you want crawled in a file,
 one per line and run `bin/triage_new_links.sh` on that file, that will
 produce two files `with_sitemap.txt` and `without_sitemap.txt`. Now
 add the contents of those to `bin/gen_sitemap.sh` and run it. This will
-produce `list_urls2.txt` which you can use as input for femtocrawl.
+produce `list_urls.txt` which you can use as input for femtocrawl.
 
 === I want to crawl some parts of reddit and read them offline, how do I do that?
 

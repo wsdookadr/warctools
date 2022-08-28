@@ -36,6 +36,7 @@ if __name__ == '__main__':
         re_exclude = re.compile(args.exclude)
 
     seen_uri = {}
+    MAX_RECORD_LENGTH = 130 * 1024 * 1024
 
     with open(args.out, 'wb') as output_stream:
         writer = WARCWriter(output_stream, gzip=True)
@@ -57,7 +58,7 @@ if __name__ == '__main__':
                         if rt not in ['request','response']:
                             continue
 
-                        if rl > 20 * 1024 * 1024:
+                        if rl > MAX_RECORD_LENGTH:
                             continue
 
                         if args.fix:
