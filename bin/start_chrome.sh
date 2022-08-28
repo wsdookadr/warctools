@@ -20,7 +20,6 @@ timeout $LIMIT chromium \
 --disk-cache-size=0 \
 --media-cache-size=0 \
 --disable-application-cache \
---media-cache-size=0 \
 --disable-lru-snapshot-cache \
 --aggressive-cache-discard \
 ${URLS}

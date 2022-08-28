@@ -55,11 +55,11 @@ if __name__ == '__main__':
             print("\t".join(map(str, reversed(r))))
     elif args.out == 'live':
         for r in cur.execute(Q[args.type], (args.query,)):
-            subprocess.run([BROWSER, r[0]])
+            subprocess.Popen([BROWSER, r[0]], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     elif args.out == 'kiwix':
         for r in cur.execute(Q[args.type], (args.query,)):
             v = re.sub(r'https?://','http://localhost:8083/big/A/',r[0])
-            subprocess.run([BROWSER, v])
+            subprocess.Popen([BROWSER, v], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 
