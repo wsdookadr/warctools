@@ -89,7 +89,7 @@ You can also use multiple of these switches at the same time.
       har output switch
 * [50%] add chromium support
 * [x] the bash version of femtocrawl knew where to pick up where it left off, do the same for the py version
-* [ ] merge validation into crawling, right after the warc has been produced, as a background process
+* [x] merge validation into crawling, right after the warc has been produced, as a background process
       independent of the rest.
 * [ ] make it easy to check and handle redownload of broken resources in the already downloaded warc
       (resources that didn't have time to complete within the given timeout)
@@ -109,7 +109,7 @@ You can also use multiple of these switches at the same time.
 * [ ] design recrawl using a combination of: sitemaps, feeds, common-crawl, etag header & HEAD request
 * [ ] find a way to take a dom snapshot post-rendering, export it as html and use that for indexing.
       this will help with comment sections which are many times loaded by 3rd party js and show up
-      as separate warc records. see link:https://addons.mozilla.org/en-US/firefox/addon/pdso/[pdso] ; 
+      as separate warc records. see link:https://github.com/HMaker/python-cdp[python-cdp] , link:https://addons.mozilla.org/en-US/firefox/addon/pdso/[pdso] , 
       link:https://github.com/prantlf/grunt-html-dom-snapshot[dom-snapshot]
 * [ ] find ways to derive website templates, use that to locate redundant content
       and filter it out of the indexing process in order to improve offline search results

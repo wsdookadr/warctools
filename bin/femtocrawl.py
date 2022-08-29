@@ -3,16 +3,19 @@ import os
 import re
 import argparse
 import subprocess
+import signal
 from time import sleep
 
-def kill_browser_mitm(browser):
+def kill_mitm():
     os.system('''
     pkill -INT -f mitmdump
-    pkill -f {0}
-    killall {0}-esr
-    killall {0}
-    '''.format(browser)
+    '''
     )
+
+def validate_warc(i):
+    warc_file="warc/{0}.warc".format(i)
+    if os.path.isfile(warc_file):
+        subprocess.Popen(["/bin/bash","warc_validate.sh",str(i)])
 
 def list_to_batches(L, n):
     A = []
@@ -50,16 +53,19 @@ if __name__ == '__main__':
         print("i=",i)
         if os.path.isfile("warc/{0}.warc".format(i)):
             continue
-        kill_browser_mitm(args.browser)
-        sleep(4)
         batch_num = str(i)
-        subprocess.Popen(["/bin/bash","start_proxy.sh",batch_num,args.output_type])
+        proc_proxy = subprocess.Popen(["/bin/bash","start_proxy.sh",batch_num,args.output_type])
         sleep(1)
         subprocess.Popen(["/bin/bash",start_script,str(args.batch_timeout)] + batch)
         sleep(int(args.batch_timeout))
-    sleep(1)
-    kill_browser_mitm(args.browser)
-    sleep(1)
 
+        kill_mitm()
+        try:
+            proc_proxy.wait(timeout=4)
+        except subprocess.TimeoutExpired as e:
+            pass
+        proc_proxy.send_signal(signal.SIGKILL)
+        validate_warc(i)
 
+    sleep(1)
 

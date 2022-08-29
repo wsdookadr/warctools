@@ -7,6 +7,19 @@ def valid_dir(outputdir):
         raise argparse.ArgumentTypeError('input directory does not exist')
     return outputdir
 
+#
+#
+# dir structure:
+# 
+# warc/ - where all the warcs are kept, each containing a full batch of pages together with all their resources
+# har/  - where har are kept (if the har output format is selected)
+# log/  - this contains the logs for validation (running warc2zim for each batch). they correspond to files in warc/
+# zim/  - contains the zim file converted after joining together all warc in warc/
+# db/   - contains an sqlite database with full text indexes to allow offline searches
+#
+#
+#
+
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(description='operator script for femtocrawl')
     arg_parser.add_argument('--output-type' ,dest='output_type'   ,action='store', required=False, default='warc', choices=['har','warc'], help='output type')
@@ -67,6 +80,7 @@ if __name__ == '__main__':
         os.system('''
         mkdir {2}
         docker run --rm=true -ti               \\
+            -v `pwd`/log:/home/user/log/:Z \\
             -v `pwd`/input:/home/user/input/:Z \\
             -v `pwd`/{2}:/home/user/{2}/:Z   \\
             wsdookadr/femtocrawl:{0} './femtocrawl.py --batch-timeout 24 --url-list input/list_urls.txt --browser {1} --output-type {2}'
