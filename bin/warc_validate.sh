@@ -2,7 +2,7 @@
 #
 # Note: this is designed for small warc, less than 200MB in size
 #
-# Receives a batch number, and validates a warc file in warc/
+# Receives a batch number and validates a warc file in warc/
 # Writes the output to log/
 #
 process() {
