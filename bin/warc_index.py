@@ -58,14 +58,16 @@ def import_batch(db_path, batch):
         c.executemany(sql1, batch)
         con.commit()
     except con.Error as e:
-        print(e)
+        # print(e)
+        pass
 
     try:
         c = con.cursor()
         c.executemany(sql2, batch)
         con.commit()
     except con.Error as e:
-        print(e)
+        # print(e)
+        pass
 
     con.close()
 
