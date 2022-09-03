@@ -40,13 +40,14 @@ if __name__ == '__main__':
     arg_parser.add_argument('--pdfs', dest='pdfs', action='store_true', required=False, help='grab pdf urls')
     arg_parser.add_argument('--js', dest='js', action='store_true', required=False, help='grab script urls')
     arg_parser.add_argument('--css', dest='css', action='store_true', required=False, help='grab css style urls')
+    arg_parser.add_argument('--links', dest='links', action='store_true', required=False, help='all links')
 
     args = arg_parser.parse_args()
 
     seen = {}
 
     # extraction
-    if args.infile and (args.get_latex_imgs or args.imgs or args.pdfs or args.js or args.css):
+    if args.infile and (args.get_latex_imgs or args.imgs or args.pdfs or args.js or args.css or args.links):
         with open(args.infile, 'rb') as input_stream:
             for record in ArchiveIterator(input_stream):
                 rt = record.rec_headers.get_header('WARC-Type')
@@ -80,7 +81,7 @@ if __name__ == '__main__':
 
                 elif args.imgs:
                     for e in r.xpath('//img'):
-                        if 'src' in e.attrib:
+                        if 'src' in e.attrib and re.match(r'^http',e.attrib['src']):
                             print(e.attrib['src'])
 
                 if args.pdfs:
@@ -97,5 +98,9 @@ if __name__ == '__main__':
                         if 'href' in e.attrib:
                             print(e.attrib['href'])
 
+                if args.links:
+                    for e in r.xpath('//a'):
+                        if 'href' in e.attrib:
+                            print(e.attrib['href'])
 
 
