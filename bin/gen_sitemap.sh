@@ -10,7 +10,7 @@ sitemap1() {
 sitemap2() {
     URL="$1"
     DOMAIN=$(echo "$URL" | awk -F[/:] '{print $4}')
-    wget --no-parent --spider -Ptemp_dir -r "$URL" --domains="$DOMAIN" \
+    wget --no-parent --spider -Ptemp_dir -r "$URL" --regex-type pcre --domains="$DOMAIN" \
     --exclude-domains "linkedin.com,tumblr.com,reddit.com,whatsapp.com,getpocket.com,twitter.com,facebook.com,google.com" \
     --reject-regex ".*(redirect=|tumblr.com|linkedin.com|reddit.com|twitter.com|facebook.com|accounts.google.com|replytocom=|share=facebook|share=twitter|plus.google.com|feed=|wp-json|wp-content|wp-includes|oembed|/feed/).*" \
     -R "*redirect=*,*tumblr.com*,*linkedin.com*,*reddit.com*,*twitter.com*,*facebook.com*,*accounts.google.com*,*replytocom=*,*share=facebook*,*share=twitter*,*plus.google.com*,*feed=*,*wp-json*,*wp-content*,*wp-includes*,*oembed*,*/feed/*" \
@@ -55,9 +55,9 @@ sitemap5() {
 sitemap6() {
     URL="$1"
     DOMAIN=$(echo "$URL" | awk -F[/:] '{print $4}')
-    wget --no-parent --spider -Ptemp_dir -r "$URL" --domains="$DOMAIN" --exclude-domains "twitter.com,facebook.com,google.com" \
-    --accept-regex ".*(viewtopic.php|viewforum.php|index.php).*" \
-    --reject-regex ".*(posting.php|search.php|ucp.php|search.php|memberlist.php|view=print|twitter.com|facebook.com|accounts.google.com|plus.google.com|feed=|wp-json|wp-content|wp-includes|oembed|/feed/).*" 2>&1 | \
+    wget --no-parent --spider -Ptemp_dir -r "$URL" --regex-type pcre --domains="$DOMAIN" --exclude-domains "twitter.com,facebook.com,google.com" \
+    --accept-regex ".*(showthread.php|forumdisplay.php|viewtopic.php|viewforum.php|index.php).*" \
+    --reject-regex ".*(showthread.php.*pid=|showthread.php.*action=|posting.php|search.php|ucp.php|search.php|memberlist.php|view=print|twitter.com|facebook.com|accounts.google.com|plus.google.com|feed=|wp-json|wp-content|wp-includes|oembed|/feed/).*" 2>&1 | \
     grep '^--' | awk '{ print $3 }' | grep -v '\.\(css\|js\|png\|gif\|jpg\|JPG\)$'
     rm -rf temp_dir
 }
@@ -77,7 +77,7 @@ sitemap_wp_nositemap() {
 # (tested, rejection rules are working fine)
 sitemap7() {
     URL="$1"
-    wget -r -Ptemp_dir --max-redirect=2 --no-clobber --spider --convert-links --reject-regex '.*(wp-content|\/feed\/|wp-json|wp-includes|share=|replytocom=|feed=|oembed).*' "$URL" \
+    wget -r -Ptemp_dir --max-redirect=2 --no-clobber --regex-type pcre --spider --convert-links --reject-regex '.*(wp-content|\/feed\/|wp-json|wp-includes|share=|replytocom=|feed=|oembed).*' "$URL" \
     2>&1 | grep '^--' | awk '{ print $3 }' | grep -v '\.\(css\|js\|png\|gif\|jpg\|JPG\)$'
     rm -rf temp_dir
 }

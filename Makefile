@@ -1,5 +1,5 @@
 build:
-	docker build -t wsdookadr/femtocrawl:0.3.1 .
+	docker build -t wsdookadr/femtocrawl:0.3.2 .
 	docker build -t wsdookadr/femtocrawl:latest .
 
 push:

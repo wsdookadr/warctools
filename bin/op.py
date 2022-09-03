@@ -35,7 +35,7 @@ if __name__ == '__main__':
     arg_parser.add_argument('--kiwix'       ,dest='kiwix', action='store_true', required=False, help='start kiwix server with zim/big.zim')
     arg_parser.add_argument('--symlinks'    ,dest='symlinks', action='store', default=None, type=valid_dir, required=False, help='create dir structure at a the given location and symlinks pointing there')
 
-    TAG="0.3.1"
+    TAG="0.3.2"
 
     args = arg_parser.parse_args()
 

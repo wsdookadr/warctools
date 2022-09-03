@@ -5,6 +5,7 @@ import argparse
 import subprocess
 import signal
 from time import sleep
+
 def kill_mitm():
     os.system('''
     pkill -INT -f mitmdump
