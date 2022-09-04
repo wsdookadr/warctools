@@ -6,3 +6,4 @@ ff/
 bin/__pycache__/
 input/
 log/
+expand-*.json
