@@ -186,6 +186,22 @@ crawl 29k urls per day. The CPU usage is minimal.
 
 Coming soon.
 
+=== I want to expand the archive with new links, how do I do that?
+
+Some links will be added to the input list. Delete the last batch to make sure no links will be missed.
+
+----
+rm warc/$(ls -tr warc/ | tail -1)
+----
+
+Suppose you've crawled a forum, but urls containing `/attachment` were not fetched and you want those too.
+Run the following to extract the links from the archives, and re-run the crawl.
+
+----
+find warc/ -name "*.warc" | xargs -I{} ./bin/warc_resources.py --infile {} --links | grep "/attachment" | sort | uniq >> input/list_urls.txt
+./bin/op.py --crawl
+----
+
 === What do I use this for?
 
 Use-cases:
