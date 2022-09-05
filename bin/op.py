@@ -33,13 +33,14 @@ if __name__ == '__main__':
     arg_parser.add_argument('--zim'         ,dest='zim', action='store_true', required=False, help='converts warc/big.warc into zim/big.zim')
     arg_parser.add_argument('--index'       ,dest='index', action='store_true', required=False, help='index warc')
     arg_parser.add_argument('--kiwix'       ,dest='kiwix', action='store_true', required=False, help='start kiwix server with zim/big.zim')
-    arg_parser.add_argument('--symlinks'    ,dest='symlinks', action='store', default=None, type=valid_dir, required=False, help='create dir structure at a the given location and symlinks pointing there')
+    arg_parser.add_argument('--symcreate'   ,dest='symcreate', action='store', default=None, type=valid_dir, required=False, help='create dir structure at a the given location and symlinks pointing there')
+    arg_parser.add_argument('--symclear'    ,dest='symclear', action='store_true', default=None, required=False, help='clear symlinks')
 
     TAG="0.3.2"
 
     args = arg_parser.parse_args()
 
-    if args.symlinks:
+    if args.symcreate:
         # creates the dir structure at the given directory and
         # symlinks all the dirs back here
         os.system('''
@@ -48,8 +49,15 @@ if __name__ == '__main__':
             mkdir -p {0}/$x 2>/dev/null
             ln    -s {0}/$x
         done
-        '''.format(args.symlinks)
+        '''.format(args.symcreate)
         )
+
+    if args.symclear:
+        os.system('''
+        rm -f warc zim db log
+        '''
+        )
+
     if args.attach:
         os.system('''
         mkdir log/ warc/ input/ 2>/dev/null
