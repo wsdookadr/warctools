@@ -44,7 +44,8 @@ if __name__ == '__main__':
 
     with open(args.out, 'wb') as output_stream:
         writer = WARCWriter(output_stream, gzip=True)
-        for obj_f in sorted(filter(lambda x: not x.is_dir(), os.scandir(args.indir)), key=lambda e: extract_num(e.name)):
+        L = sorted(filter(lambda x: x.name != "big.warc" and not x.is_dir(), os.scandir(args.indir)), key=lambda e: extract_num(e.name))
+        for obj_f in L:
             if obj_f.is_file():
                 f = obj_f.path
                 if not re.match(r'^.*\.(warc|warc.gz)$', f):
@@ -99,10 +100,7 @@ if __name__ == '__main__':
 
                         writer.write_record(record)
 
-    if args.dry1:
-        os.remove(args.out)
-
-    if os.stat(args.out).st_size == 0:
+    if os.stat(args.out).st_size == 0 or args.dry1:
         os.remove(args.out)
 
 

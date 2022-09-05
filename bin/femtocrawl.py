@@ -61,7 +61,7 @@ if __name__ == '__main__':
 
         kill_mitm()
         try:
-            proc_proxy.wait(timeout=4)
+            proc_proxy.wait(timeout=7)
         except subprocess.TimeoutExpired as e:
             pass
         proc_proxy.send_signal(signal.SIGKILL)
