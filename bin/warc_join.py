@@ -16,6 +16,10 @@ def absent_file(f):
         raise argparse.ArgumentTypeError('file already present')
     return f
 
+def extract_num(s):
+    s_num = re.sub("[^0-9]","",s)
+    return int(s_num)
+
 if __name__ == '__main__':
 
     arg_parser = argparse.ArgumentParser(description='WARC join tool')
@@ -40,8 +44,7 @@ if __name__ == '__main__':
 
     with open(args.out, 'wb') as output_stream:
         writer = WARCWriter(output_stream, gzip=True)
-        for obj_f in sorted(os.scandir(args.indir), key=lambda e: e.name):
-
+        for obj_f in sorted(filter(lambda x: not x.is_dir(), os.scandir(args.indir)), key=lambda e: extract_num(e.name)):
             if obj_f.is_file():
                 f = obj_f.path
                 if not re.match(r'^.*\.(warc|warc.gz)$', f):
