@@ -91,7 +91,7 @@ You can also use multiple of these switches at the same time.
 * [x] the bash version of femtocrawl knew where to pick up where it left off, do the same for the py version
 * [x] merge validation into crawling, right after the warc has been produced, as a background process
       independent of the rest.
-* [ ] pdf files don't render properly. comparing the original with the archived one shows differences in size.
+* [x] pdf files don't render properly. comparing the original with the archived one shows differences in size.
       the issue is most likely in har_dump.py or har2warc. take the smallest pdf possible and analyze
 * [ ] make it easy to check and handle redownload of broken resources in the already downloaded warc
       (resources that didn't have time to complete within the given timeout)

@@ -133,8 +133,11 @@ def response(flow: mitmproxy.http.HTTPFlow):
         "timings": timings,
     }
 
+    mimeType = flow.response.headers.get('Content-Type', '')
+    binMimeTypes = set(["application/pdf",])
+
     # Store binary data as base64
-    if strutils.is_mostly_bin(flow.response.content):
+    if mimeType in binMimeTypes or strutils.is_mostly_bin(flow.response.content):
         entry["response"]["content"]["text"] = base64.b64encode(flow.response.content).decode()
         entry["response"]["content"]["encoding"] = "base64"
     else:
