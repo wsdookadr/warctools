@@ -5,6 +5,16 @@ tools used to produce sitemaps and some tools to deal with WARC files.
 
 == Quick start
 
+Make sure there is a group "docker" on your machine and that the user you'll run femtocrawl
+under is added to that group. You may have to restart the machine for these changes to take
+effect (also see link:https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user[steps 1-2]
+in the docker docs):
+
+----
+sudo groupadd docker
+sudo usermod -aG docker $USER
+----
+
 Clone femtocrawl and pull the latest femtocrawl image:
 
 ----
