@@ -46,7 +46,7 @@ if __name__ == '__main__':
     arg_parser.add_argument('--symcreate'   ,dest='symcreate', action='store', default=None, type=valid_dir, required=False, help='create dir structure at a the given location and symlinks pointing there')
     arg_parser.add_argument('--symclear'    ,dest='symclear', action='store_true', default=None, required=False, help='clear symlinks')
 
-    TAG="0.3.2"
+    TAG="0.3.3"
 
     args = arg_parser.parse_args()
 

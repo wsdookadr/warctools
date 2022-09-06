@@ -18,7 +18,26 @@ def absent_file(f):
 
 def extract_num(s):
     s_num = re.sub("[^0-9]","",s)
-    return int(s_num)
+    if s_num == "":
+        return None
+    else:
+        return int(s_num)
+
+def sort_warc(indir):
+    L1 = []
+    L2 = []
+    for x in os.scandir(args.indir):
+        if x.name == "big.warc" or x.is_dir():
+            continue
+        n = extract_num(x.name)
+        if n is not None:
+            L1.append(x)
+        else:
+            L2.append(x)
+
+    L1 = sorted(L1, key=lambda e: extract_num(e.name))
+
+    return L1 + L2
 
 if __name__ == '__main__':
 
@@ -44,7 +63,7 @@ if __name__ == '__main__':
 
     with open(args.out, 'wb') as output_stream:
         writer = WARCWriter(output_stream, gzip=True)
-        L = sorted(filter(lambda x: x.name != "big.warc" and not x.is_dir(), os.scandir(args.indir)), key=lambda e: extract_num(e.name))
+        L = sort_warc(args.indir)
         for obj_f in L:
             if obj_f.is_file():
                 f = obj_f.path
