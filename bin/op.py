@@ -20,6 +20,16 @@ def valid_dir(outputdir):
 #
 #
 
+# 
+# TODO: early exit on user not in docker group
+# TODO: early exit on input/list_urls.txt empty or absent
+# TODO: early exit on warc/ dir present but not writable (from container)
+# TODO: early exit on har/ dir present but not writable (from container)
+# TODO: early exit on log/ dir present but not writable (from container)
+# TODO: handle UID/GID host<->container problem
+# TODO: limit docker privileges/capabilities as much as possible
+#
+
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(description='operator script for femtocrawl')
     arg_parser.add_argument('--output-type' ,dest='output_type'   ,action='store', required=False, default='warc', choices=['har','warc'], help='output type')
