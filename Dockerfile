@@ -1,4 +1,4 @@
-FROM debian:11
+FROM debian:12-slim
 LABEL maintainer "Stefan Corneliu Petrea <stefan.petrea@gmail.com>"
 RUN apt-get update
 RUN apt-get -y install \
@@ -6,6 +6,7 @@ RUN apt-get -y install \
     firefox-esr chromium curl wget parallel zip unzip \
     python3-pip xmlstarlet jq libmagic-dev poppler-utils sqlite3 vim \
     libnss3-tools
+RUN apt-get -y install gcc g++ make python3-dev libxml2-dev libxslt1-dev
 RUN apt-get -y clean
 RUN rm -f /usr/bin/kiwix-tools.tar.gz && \
     wget -O /usr/bin/kiwix-tools.tar.gz https://download.kiwix.org/release/kiwix-tools/kiwix-tools_linux-x86_64-3.3.0.tar.gz && \
@@ -20,12 +21,12 @@ RUN ./conf_root.sh
 USER user
 WORKDIR /home/user
 RUN echo export PATH="\"\$HOME/.local/bin/:\$PATH\"" >> ~/.bashrc
-RUN pip3 install virtualenv==20.16.3
+RUN pip3 install --break-system-packages virtualenv==20.16.3
 RUN bash -c '~/.local/bin/virtualenv v_mitmproxy && chmod +x ./v_mitmproxy/bin/activate && source ./v_mitmproxy/bin/activate && pip3 install mitmproxy==8.1.1 && pip3 cache purge && deactivate'
 RUN bash -c '~/.local/bin/virtualenv v_har2warc && chmod +x ./v_har2warc/bin/activate && source ./v_har2warc/bin/activate && pip3 install har2warc==1.0.4 && pip3 cache purge && deactivate'
 RUN bash -c '~/.local/bin/virtualenv v_warcio && chmod +x ./v_warcio/bin/activate && source ./v_warcio/bin/activate && pip3 install warcio==1.7.4 && pip3 cache purge && deactivate'
-RUN bash -c '~/.local/bin/virtualenv v_warc2zim && chmod +x ./v_warc2zim/bin/activate && source ./v_warc2zim/bin/activate && pip3 install warc2zim==1.4.3 && pip3 cache purge && deactivate'
-RUN bash -c '~/.local/bin/virtualenv v_warcindex && chmod +x ./v_warcindex/bin/activate && source ./v_warcindex/bin/activate && pip3 install warcio==1.7.4 lxml==4.6.3 && pip3 cache purge && deactivate'
+RUN bash -c '~/.local/bin/virtualenv v_warc2zim && chmod +x ./v_warc2zim/bin/activate && source ./v_warc2zim/bin/activate && pip3 install warc2zim==1.5.3 && pip3 cache purge && deactivate'
+RUN bash -c '~/.local/bin/virtualenv v_warcindex && chmod +x ./v_warcindex/bin/activate && source ./v_warcindex/bin/activate && pip3 install warcio==1.7.4 lxml==4.9.3 && pip3 cache purge && deactivate'
 COPY --chown=user data/ff.zip data/sample.warc /home/user/
 COPY --chown=user data/certs/* /home/user/.mitmproxy/
 COPY --chown=user bin/conf_user.sh /home/user/
@@ -33,6 +34,6 @@ RUN ./conf_user.sh
 RUN unzip ff.zip && rm -f ff.zip
 RUN mkdir -p /home/user/.mozilla/firefox/p1 /home/user/.cache/mozilla/firefox/p1
 COPY --chown=user bin/* /home/user/
-RUN cp warc2zim.main.py.patched /home/user/v_warc2zim/lib/python3.9/site-packages/warc2zim/main.py
+RUN cp warc2zim.main.py.patched /home/user/v_warc2zim/lib/python3.11/site-packages/warc2zim/main.py
 
 ENTRYPOINT ["bash","-i","-c"]
