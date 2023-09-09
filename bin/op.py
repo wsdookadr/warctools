@@ -11,11 +11,12 @@ def valid_dir(outputdir):
 #
 # dir structure:
 # 
-# warc/ - where all the warcs are kept, each containing a full batch of pages together with all their resources
-# har/  - where har are kept (if the har output format is selected)
-# log/  - this contains the logs for validation (running warc2zim for each batch). they correspond to files in warc/
-# zim/  - contains the zim file converted after joining together all warc in warc/
-# db/   - contains an sqlite database with full text indexes to allow offline searches
+# warc/    - all the single-batch warcs that were captured by femtocrawl (including all their resources)
+# har/     - where har are kept (if the har output format is selected)
+# log/     - this contains the logs for validation (running warc2zim for each batch). they correspond to files in warc/
+# zim/     - contains the zim file converted after joining together all warc in warc/
+# db/      - contains an sqlite database with full text indexes to allow offline searches
+# input/   - scripts that produce the list_urls.txt file
 #
 #
 #
