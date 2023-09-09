@@ -16,7 +16,7 @@ if __name__ == '__main__':
     args = arg_parser.parse_args()
 
     DB="db/big.db"
-    BROWSER="chromium"
+    BROWSER="google-chrome-stable"
 
     Q=[""] * 20
 

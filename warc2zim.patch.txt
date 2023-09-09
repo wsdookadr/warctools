@@ -1,0 +1,12 @@
+--- v_warc2zim/lib/python3.11/site-packages/warc2zim/main.py.orig	2023-09-10 00:52:26.488113472 +0000
++++ v_warc2zim/lib/python3.11/site-packages/warc2zim/main.py	2023-09-10 00:52:43.120904369 +0000
+@@ -610,6 +610,9 @@
+         ):
+             return False
+ 
++        if location is None:
++            return False
++
+         location = record.http_headers.get("Location", "")
+         return canonicalize(url) == canonicalize(location)
+ 

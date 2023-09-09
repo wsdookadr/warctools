@@ -6,9 +6,8 @@ tools used to produce sitemaps and some tools to deal with WARC files.
 == Quick start
 
 Make sure there is a group "docker" on your machine and that the user you'll run femtocrawl
-under is added to that group. You may have to restart the machine for these changes to take
-effect (also see link:https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user[steps 1-2]
-in the docker docs):
+under is added to that group. Also see link:https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user[steps 1-2]
+in the docker docs:
 
 ----
 sudo groupadd docker
@@ -23,16 +22,27 @@ cd femtocrawl
 docker pull wsdookadr/femtocrawl
 ----
 
-Create the required directories:
+Create a top-level directory for the crawl.
+
+This will hold all the directory hierarchy for the crawl.
 
 ----
-mkdir input/ warc/ zim/
+mkdir ~/crawl1
 ----
 
-Populate the input url list:
+Create the symlinks:
 
 ----
-echo -e "https://lobste.rs\nhttps://news.ycombinator.com\nhttp://google.com\nhttp://mozilla.org" > input/list_urls.txt
+./bin/op.py --symcreate ~/crawl1
+----
+
+Add the urls to be crawled to `input/list_urls.txt`:
+
+----
+https://lobste.rs
+https://news.ycombinator.com
+http://google.com
+http://mozilla.org
 ----
 
 Run the crawl
