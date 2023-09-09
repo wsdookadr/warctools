@@ -44,7 +44,7 @@ if __name__ == '__main__':
         # creates the dir structure at the given directory and
         # symlinks all the dirs back here
         os.system('''
-        for x in  warc zim db log; do
+        for x in  warc zim db log input; do
             rm -f $x
             mkdir -p {0}/$x 2>/dev/null
             ln    -s {0}/$x
@@ -54,7 +54,7 @@ if __name__ == '__main__':
 
     if args.symclear:
         os.system('''
-        rm -f warc zim db log
+        rm -f warc zim db log input
         '''
         )
 
