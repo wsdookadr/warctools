@@ -39,7 +39,7 @@ if __name__ == '__main__':
     arg_parser.add_argument('--resource-links',dest='resource_links', action='store_true', default=None, required=False, help='extract links')
     arg_parser.add_argument('--resource-pdfs',dest='resource_pdfs', action='store_true', default=None, required=False, help='extract pdfs')
 
-    VERSION="0.3.3"
+    VERSION="0.3.4"
 
     args = arg_parser.parse_args()
 
@@ -137,8 +137,8 @@ if __name__ == '__main__':
         os.system('''
         rm -f db/big.db
         docker run --rm=true -ti               \\
-            -v `pwd`/warc:/home/user/warc/:Z   \\
-            -v `pwd`/db:/home/user/db/:Z       \\
+            -v `pwd`/warc:/home/user/warc/   \\
+            -v `pwd`/db:/home/user/db/       \\
             wsdookadr/femtocrawl:{0} 'env VIRTUAL_ENV=v_warcindex ./v_warcindex/bin/python ./warc_index.py --infile warc/big.warc --out db/big.db'
         '''.format(VERSION)
         )
