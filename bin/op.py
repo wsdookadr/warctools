@@ -30,6 +30,7 @@ if __name__ == '__main__':
     arg_parser.add_argument('--clean'       ,dest='clean', action='store_true', required=False, help='cleans any data from previous crawls')
     arg_parser.add_argument('--crawl'       ,dest='crawl', action='store_true', required=False, help='runs docker on default input file')
     arg_parser.add_argument('--join'        ,dest='join', action='store_true'  , required=False, help='joins all warc into a single warc(prep for zim conversion)')
+    arg_parser.add_argument('--exclude'     ,dest='exclude', action='store'  , required=None, help='exclude entries matching pattern')
     arg_parser.add_argument('--validate'    ,dest='validate', action='store_true', required=False, help='validates the warc against warc2zim')
     arg_parser.add_argument('--zim'         ,dest='zim', action='store_true', required=False, help='converts warc/big.warc into zim/big.zim')
     arg_parser.add_argument('--index'       ,dest='index', action='store_true', required=False, help='index warc')
@@ -38,10 +39,21 @@ if __name__ == '__main__':
     arg_parser.add_argument('--symclear'    ,dest='symclear', action='store_true', default=None, required=False, help='clear symlinks')
     arg_parser.add_argument('--resource-links',dest='resource_links', action='store_true', default=None, required=False, help='extract links')
     arg_parser.add_argument('--resource-pdfs',dest='resource_pdfs', action='store_true', default=None, required=False, help='extract pdfs')
+    arg_parser.add_argument('--find-missing',dest='find_missing', action='store_true', default=None, required=False, help='find missing resources')
 
     VERSION="0.3.4"
 
     args = arg_parser.parse_args()
+
+    if args.find_missing:
+        os.system('''
+        rm -f db/big.db
+        docker run --rm=true -ti               \\
+            -v `pwd`/warc:/home/user/warc/:Z   \\
+            -v `pwd`/db:/home/user/db/:Z       \\
+        wsdookadr/femtocrawl:{0} 'env VIRTUAL_ENV=v_warcindex ./warc_find_missing.sh --infile warc/big.warc'
+        '''.format(VERSION)
+        )
 
     if args.resource_links:
         os.system('''
@@ -116,13 +128,16 @@ if __name__ == '__main__':
         '''.format(VERSION,args.browser,args.output_type)
         )
     if args.join:
-        os.system('''
+        exc=""
+        if args.exclude:
+            exc="--exclude \"{0}\"".format(args.exclude)
+        cmd='''
         rm -f warc/big.warc 2>/dev/null
         docker run --rm=true -ti               \\
             -v `pwd`/warc:/home/user/warc/:Z   \\
-            wsdookadr/femtocrawl:{0} 'env VIRTUAL_ENV=v_warcio ./v_warcio/bin/python ./warc_join.py --indir warc/ --out warc/big.warc'
-        '''.format(VERSION)
-        )
+            wsdookadr/femtocrawl:{0} 'env VIRTUAL_ENV=v_warcio ./v_warcio/bin/python ./warc_join.py --indir warc/ --out warc/big.warc {1}'
+        '''.format(VERSION,exc)
+        os.system(cmd)
     if args.validate:
         os.system('''
         rm -f log/* 2>/dev/null

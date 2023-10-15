@@ -36,7 +36,7 @@ COPY --chown=user bin/conf_user.sh /home/user/
 RUN ./conf_user.sh
 RUN unzip ff.zip && rm -f ff.zip
 RUN mkdir -p /home/user/.mozilla/firefox/p1 /home/user/.cache/mozilla/firefox/p1
-RUN ls
+RUN ls ; echo ""
 COPY --chown=user bin/* /home/user/
 COPY --chown=user warc2zim.patch.txt /home/user/
 RUN patch v_warc2zim/lib/python3.11/site-packages/warc2zim/main.py < warc2zim.patch.txt

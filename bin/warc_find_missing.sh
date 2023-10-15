@@ -11,7 +11,7 @@ filter_uri() {
 }
 
 # grab all images stored in the WARC
-warcio index -f warc-target-uri,http:content-type,http:content-length,http:status $WARC | \
+env VIRTUAL_ENV=v_warcio ./v_warcio/bin/python warcio index -f warc-target-uri,http:content-type,http:content-length,http:status $WARC | \
 jq -r -c '
     . 
     | select(
@@ -31,6 +31,6 @@ distinct | filter_uri | sort > res_available.txt
 distinct | filter_uri | sort > res_referenced.txt
 
 # get referenced resources that are not available in the WARC
-comm -1 -3 res_available.txt res_referenced.txt > res_todo.txt
+comm -1 -3 res_available.txt res_referenced.txt
 
 # TODO: use bin/warc_get_static.py to fetch all urls in res_todo.txt
