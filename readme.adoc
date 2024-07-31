@@ -1,7 +1,6 @@
 == Intro
 
-This is a minimalistic dynamic page crawler accompanied by a variety of
-tools used to produce sitemaps and some tools to deal with WARC files.
+Tools for handling WARC files.
 
 == Quick start
 

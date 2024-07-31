@@ -41,7 +41,7 @@ if __name__ == '__main__':
     arg_parser.add_argument('--resource-pdfs',dest='resource_pdfs', action='store_true', default=None, required=False, help='extract pdfs')
     arg_parser.add_argument('--find-missing',dest='find_missing', action='store_true', default=None, required=False, help='find missing resources')
 
-    VERSION="0.3.4"
+    VERSION="0.5.0"
 
     args = arg_parser.parse_args()
 
