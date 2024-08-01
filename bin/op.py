@@ -47,6 +47,7 @@ if __name__ == '__main__':
 
     if args.find_missing:
         os.system('''
+        set -x
         rm -f db/big.db
         docker run --rm=true -ti               \\
             -v `pwd`/warc:/home/user/warc/:Z   \\
