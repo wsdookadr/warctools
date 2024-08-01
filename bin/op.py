@@ -40,10 +40,22 @@ if __name__ == '__main__':
     arg_parser.add_argument('--resource-links',dest='resource_links', action='store_true', default=None, required=False, help='extract links')
     arg_parser.add_argument('--resource-pdfs',dest='resource_pdfs', action='store_true', default=None, required=False, help='extract pdfs')
     arg_parser.add_argument('--find-missing',dest='find_missing', action='store_true', default=None, required=False, help='find missing resources')
+    arg_parser.add_argument('--dump-warc-uris',dest='dump_warc_uris', action='store_true', default=None, required=False, help='list all uris stored in warc')
 
     VERSION="0.5.0"
 
     args = arg_parser.parse_args()
+
+    if args.dump_warc_uris:
+        os.system('''
+        set -x
+        rm -f db/big.db
+        docker run --rm=true -ti               \\
+            -v `pwd`/warc:/home/user/warc/:Z   \\
+            -v `pwd`/db:/home/user/db/:Z       \\
+        wsdookadr/femtocrawl:{0} 'env VIRTUAL_ENV=v_warcindex ./dump_warc_uris.sh' > warc_uris.txt
+        '''.format(VERSION)
+        )
 
     if args.find_missing:
         os.system('''
@@ -52,7 +64,7 @@ if __name__ == '__main__':
         docker run --rm=true -ti               \\
             -v `pwd`/warc:/home/user/warc/:Z   \\
             -v `pwd`/db:/home/user/db/:Z       \\
-        wsdookadr/femtocrawl:{0} 'env VIRTUAL_ENV=v_warcindex ./warc_find_missing.sh --infile warc/big.warc'
+        wsdookadr/femtocrawl:{0} 'env VIRTUAL_ENV=v_warcindex ./warc_find_missing.sh' > missing.txt
         '''.format(VERSION)
         )
 

@@ -13,7 +13,7 @@ filter_uri() {
 # grab all images stored in the WARC
 source ~/v_warcio/bin/activate
 ~/v_warcio/bin/warcio index -f warc-target-uri,http:content-type,http:content-length,http:status $WARC | \
-jq -r -c '
+jq -n -r -c '
     . 
     | select(
         (
@@ -24,12 +24,12 @@ jq -r -c '
         ( ( ."http:content-length" != null) and (."http:content-length" | tonumber) > 5)
       )
     | ."warc-target-uri"
-' | \
+' | grep -v "^jq: "   | \
 distinct | filter_uri | sort > res_available.txt
 
 # grab all images refered to by the WARC
 source ~/v_warcindex/bin/activate
-./warc_resources.py --imgs --css --infile $WARC | \
+./warc_resources.py --imgs --js --css --infile $WARC | \
 distinct | filter_uri | sort > res_referenced.txt
 
 # get unavailable but referenced WARC resources
