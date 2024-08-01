@@ -36,6 +36,10 @@ RUN ls ;
 RUN ls ;
 RUN ls ;
 RUN ls ;
+RUN ls ;
+RUN ls ;
+RUN ls ;
+RUN ls ;
 COPY --chown=user bin/* /home/user/
 
 ENTRYPOINT ["bash","-i","-c"]

@@ -50,10 +50,10 @@ if __name__ == '__main__':
         os.system('''
         set -x
         rm -f db/big.db
-        docker run --rm=true -ti               \\
+        docker run --rm=true -t                \\
             -v `pwd`/warc:/home/user/warc/:Z   \\
             -v `pwd`/db:/home/user/db/:Z       \\
-        wsdookadr/femtocrawl:{0} 'env VIRTUAL_ENV=v_warcindex ./dump_warc_uris.sh' > warc_uris.txt
+        wsdookadr/femtocrawl:{0} 'env VIRTUAL_ENV=v_warcindex ./dump_warc_uris.sh' | sort | uniq > warc_uris.txt
         '''.format(VERSION)
         )
 

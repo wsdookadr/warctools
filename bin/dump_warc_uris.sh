@@ -1,11 +1,9 @@
 #!/bin/bash
+
+stty -onlcr
 WARC="warc/big.warc"
 distinct() {
     awk 'seen[$_] != 1 {print; seen[$_]=1; }'
-}
-
-filter_uri() {
-    awk 'length < 512 && /^http/ { print; }'
 }
 
 source ~/v_warcio/bin/activate
@@ -15,6 +13,6 @@ jq -r -c '
 | select(( ."http:status" != null) and ((."http:status" | tonumber) == 200))
 | ."warc-target-uri"
 ' | \
-grep -v "^jq: "   | \
-distinct | filter_uri
+grep -v "^jq: " | \
+distinct | perl -pne 's{\r\n}{}g; s{\n}{}g; $_.="\n";' 
 
