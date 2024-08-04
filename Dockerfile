@@ -31,16 +31,6 @@ RUN apt-get -y purge gcc g++ make
 RUN apt-get -y autoremove
 USER user
 RUN ls ; echo ""
-RUN ls ;
-RUN ls ;
-RUN ls ;
-RUN ls ;
-RUN ls ;
-RUN ls ;
-RUN ls ;
-RUN ls ;
-RUN ls ;
-RUN ls ;
 COPY --chown=user bin/* /home/user/
 
 ENTRYPOINT ["bash","-i","-c"]
