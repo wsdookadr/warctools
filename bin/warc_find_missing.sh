@@ -13,7 +13,7 @@ filter_uri() {
 # grab all images stored in the WARC
 source ~/v_warcio/bin/activate
 ~/v_warcio/bin/warcio index -f warc-target-uri,http:content-type,http:content-length,http:status $WARC | \
-jq -n -r -c '
+jq -r -c '
     . 
     | select(
         (

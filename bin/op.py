@@ -11,7 +11,7 @@ def valid_dir(outputdir):
 #
 # dir structure:
 # 
-# warc/    - all the single-batch warcs that were captured by femtocrawl (including all their resources)
+# warc/    - all the single-batch warcs that were captured by warctools (including all their resources)
 # har/     - where har are kept (if the har output format is selected)
 # log/     - this contains the logs for validation (running warc2zim for each batch). they correspond to files in warc/
 # zim/     - contains the zim file converted after joining together all warc in warc/
@@ -22,11 +22,11 @@ def valid_dir(outputdir):
 #
 
 if __name__ == '__main__':
-    arg_parser = argparse.ArgumentParser(description='operator script for femtocrawl')
+    arg_parser = argparse.ArgumentParser(description='operator script for warctools')
     arg_parser.add_argument('--output-type' ,dest='output_type'   ,action='store', required=False, default='warc', choices=['har','warc'], help='output type')
     arg_parser.add_argument('--browser'     ,dest='browser'       ,action='store', required=False, default='firefox', choices=['chromium','firefox'], help='browser to use')
     arg_parser.add_argument('--shell'       ,dest='shell', action='store_true', required=False, help='starts the container and provides a shell')
-    arg_parser.add_argument('--attach'      ,dest='attach', action='store_true', required=False, help='attach to first femtocrawl container found')
+    arg_parser.add_argument('--attach'      ,dest='attach', action='store_true', required=False, help='attach to first warctools container found')
     arg_parser.add_argument('--clean'       ,dest='clean', action='store_true', required=False, help='cleans any data from previous crawls')
     arg_parser.add_argument('--crawl'       ,dest='crawl', action='store_true', required=False, help='runs docker on default input file')
     arg_parser.add_argument('--join'        ,dest='join', action='store_true'  , required=False, help='joins all warc into a single warc(prep for zim conversion)')
@@ -53,7 +53,7 @@ if __name__ == '__main__':
         docker run --rm=true -t                \\
             -v `pwd`/warc:/home/user/warc/:Z   \\
             -v `pwd`/db:/home/user/db/:Z       \\
-        wsdookadr/femtocrawl:{0} 'env VIRTUAL_ENV=v_warcindex ./dump_warc_uris.sh' | sort | uniq > warc_uris.txt
+        wsdookadr/warctools:{0} 'env VIRTUAL_ENV=v_warcindex ./dump_warc_uris.sh' | sort | uniq > warc_uris.txt
         '''.format(VERSION)
         )
 
@@ -64,7 +64,7 @@ if __name__ == '__main__':
         docker run --rm=true -ti               \\
             -v `pwd`/warc:/home/user/warc/:Z   \\
             -v `pwd`/db:/home/user/db/:Z       \\
-        wsdookadr/femtocrawl:{0} 'env VIRTUAL_ENV=v_warcindex ./warc_find_missing.sh' > missing.txt
+        wsdookadr/warctools:{0} 'env VIRTUAL_ENV=v_warcindex ./warc_find_missing.sh' > missing.txt
         '''.format(VERSION)
         )
 
@@ -74,7 +74,7 @@ if __name__ == '__main__':
         docker run --rm=true -ti               \\
             -v `pwd`/warc:/home/user/warc/:Z   \\
             -v `pwd`/db:/home/user/db/:Z       \\
-        wsdookadr/femtocrawl:{0} 'env VIRTUAL_ENV=v_warcindex ./v_warcindex/bin/python ./warc_resources.py --links --infile warc/big.warc'
+        wsdookadr/warctools:{0} 'env VIRTUAL_ENV=v_warcindex ./v_warcindex/bin/python ./warc_resources.py --links --infile warc/big.warc'
         '''.format(VERSION)
         )
     if args.resource_pdfs:
@@ -83,7 +83,7 @@ if __name__ == '__main__':
         docker run --rm=true -ti               \\
             -v `pwd`/warc:/home/user/warc/:Z   \\
             -v `pwd`/db:/home/user/db/:Z       \\
-        wsdookadr/femtocrawl:{0} 'env VIRTUAL_ENV=v_warcindex ./v_warcindex/bin/python ./warc_resources.py --pdfs --infile warc/big.warc'
+        wsdookadr/warctools:{0} 'env VIRTUAL_ENV=v_warcindex ./v_warcindex/bin/python ./warc_resources.py --pdfs --infile warc/big.warc'
         '''.format(VERSION)
         )
     if args.symcreate:
@@ -107,7 +107,7 @@ if __name__ == '__main__':
     if args.attach:
         os.system('''
         mkdir log/ warc/ input/ 2>/dev/null
-        id=$(docker ps | rg "femtocrawl" | head -1 | awk '{print $1}')
+        id=$(docker ps | rg "warctools" | head -1 | awk '{print $1}')
         docker exec -ti $id bash
         '''
         )
@@ -120,7 +120,7 @@ if __name__ == '__main__':
             -v `pwd`/input:/home/user/input/:Z \\
             -v `pwd`/warc:/home/user/warc/:Z   \\
             -v `pwd`/zim:/home/user/zim/:Z   \\
-            wsdookadr/femtocrawl:{0} bash
+            wsdookadr/warctools:{0} bash
         '''.format(VERSION)
         )
     if args.clean:
@@ -137,7 +137,7 @@ if __name__ == '__main__':
             -v `pwd`/log:/home/user/log/:Z \\
             -v `pwd`/input:/home/user/input/:Z \\
             -v `pwd`/{2}:/home/user/{2}/:Z   \\
-            wsdookadr/femtocrawl:{0} './femtocrawl.py --batch-timeout 24 --url-list input/list_urls.txt --browser {1} --output-type {2}'
+            wsdookadr/warctools:{0} './warctools.py --batch-timeout 24 --url-list input/list_urls.txt --browser {1} --output-type {2}'
         '''.format(VERSION,args.browser,args.output_type)
         )
     if args.join:
@@ -148,7 +148,7 @@ if __name__ == '__main__':
         rm -f warc/big.warc 2>/dev/null
         docker run --rm=true -ti               \\
             -v `pwd`/warc:/home/user/warc/:Z   \\
-            wsdookadr/femtocrawl:{0} 'env VIRTUAL_ENV=v_warcio ./v_warcio/bin/python ./warc_join.py --indir warc/ --out warc/big.warc {1}'
+            wsdookadr/warctools:{0} 'env VIRTUAL_ENV=v_warcio ./v_warcio/bin/python ./warc_join.py --indir warc/ --out warc/big.warc {1}'
         '''.format(VERSION,exc)
         os.system(cmd)
     if args.validate:
@@ -158,7 +158,7 @@ if __name__ == '__main__':
         docker run --rm=true -ti               \\
             -v `pwd`/warc:/home/user/warc/:Z   \\
             -v `pwd`/log:/home/user/log/:Z     \\
-            wsdookadr/femtocrawl:{0} './validate.sh'
+            wsdookadr/warctools:{0} './validate.sh'
         '''.format(VERSION)
         )
     if args.index:
@@ -167,7 +167,7 @@ if __name__ == '__main__':
         docker run --rm=true -ti               \\
             -v `pwd`/warc:/home/user/warc/   \\
             -v `pwd`/db:/home/user/db/       \\
-            wsdookadr/femtocrawl:{0} 'env VIRTUAL_ENV=v_warcindex ./v_warcindex/bin/python ./warc_index.py --infile warc/big.warc --out db/big.db'
+            wsdookadr/warctools:{0} 'env VIRTUAL_ENV=v_warcindex ./v_warcindex/bin/python ./warc_index.py --infile warc/big.warc --out db/big.db'
         '''.format(VERSION)
         )
     if args.zim:
@@ -177,7 +177,7 @@ if __name__ == '__main__':
         docker run --rm=true -ti                                \\
             -v `pwd`/warc:/home/user/warc/:Z                    \\
             -v `pwd`/zim:/home/user/zim/:Z                      \\
-            wsdookadr/femtocrawl:{0}                            \\
+            wsdookadr/warctools:{0}                            \\
             'env VIRTUAL_ENV=v_warc2zim ./v_warc2zim/bin/warc2zim --verbose --lang eng --output zim/ --zim-file big.zim --name "big" warc/big.warc'
         '''.format(VERSION)
         )
@@ -188,7 +188,7 @@ if __name__ == '__main__':
         docker run --rm=true -ti             \\
             -p 8083:8083                     \\
             -v `pwd`/zim:/home/user/zim/:Z   \\
-            wsdookadr/femtocrawl:{0} '/usr/bin/kiwix-serve -i 0.0.0.0 --threads 30 --port 8083 /home/user/zim/big.zim'
+            wsdookadr/warctools:{0} '/usr/bin/kiwix-serve -i 0.0.0.0 --threads 30 --port 8083 /home/user/zim/big.zim'
         '''.format(VERSION)
         )
 
